@@ -1,0 +1,122 @@
+/**
+ * @name RolesDesign
+ * @author Wolfÿ
+ * @version 1.0
+ * @description Fills and outlines the roles on a user profile with their role color
+ * @invite avia
+ * @source https://github.com/MEWPASCO/rainbowglow-avatars
+ * @website https://www.avariaxyz.win/
+ */
+
+:root {
+  --role-fill-opacity: 0.3;   /* Background fill: 0 = off, 1 = solid */
+  --role-border-opacity: 1;   /* Outline: 0 = off, 1 = solid */
+  --role-border-width: 2px;   /* Must be above 0 for the outline to show */
+}
+
+/*
+ * Discord class names carry a build hash (e.g. role_af3987) that changes with
+ * updates, so everything below matches on the stable part before the hash.
+ */
+
+/* === Base Role Pill === */
+:is([class^="role_"], [class*=" role_"]) {
+  transform: none;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  overflow: visible;
+  padding: 2px 6px;
+}
+
+/* === Remove Icon === */
+:is([class^="role_"], [class*=" role_"]) [class*="roleRemoveIcon_"] {
+  left: 18px;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+/* === Reset Remove Button Position === */
+:is([class^="role_"], [class*=" role_"]) [class*="roleRemoveButton_"] {
+  position: static;
+}
+
+/* === Fill Layer (::before) === */
+:is([class^="role_"], [class*=" role_"]) [class*="roleCircle_"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: 5px;
+  box-sizing: border-box;
+  opacity: var(--role-fill-opacity);
+  pointer-events: none;
+}
+
+/* === Outline Layer (::after) === */
+:is([class^="role_"], [class*=" role_"]) [class*="roleCircle_"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border: var(--role-border-width) solid transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  opacity: var(--role-border-opacity);
+  pointer-events: none;
+
+  /* Mask trick: cut out the padding box so only the border ring shows */
+  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* === Text Contrast Fix (dark themes only, light themes keep Discord's text color) === */
+.theme-dark [class*="roleName_"] {
+  color: hsl(0, 0%, 95%) !important;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* === Base Role Pill inside Adding Role Menu === */
+[class*="listBoxItemContent_"] {
+  transform: none;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  overflow: visible;
+  padding: 2px 6px;
+}
+
+/* === Fill + Outline inside Adding Role Menu ===
+   NOTE: the space before ::before / ::after means "of every descendant".
+   Kept as in v1.1; if it works, narrow it to the specific child element. */
+[class*="listBoxItemContent_"] ::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: 5px;
+  box-sizing: border-box;
+  opacity: var(--role-fill-opacity);
+  pointer-events: none;
+}
+
+[class*="listBoxItemContent_"] ::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border: var(--role-border-width) solid transparent;
+  border-radius: 5px;
+  box-sizing: border-box;
+  opacity: var(--role-border-opacity);
+  pointer-events: none;
+
+  -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
